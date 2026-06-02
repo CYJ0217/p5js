@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>p5.js Artworks Gallery</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>p5.js Visual Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
+        /* 1. 디자인 컨셉: 브라운 & 핑크 톤 팔레트 설정 */
         :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
+            --bg-color: #fdf6f7;        /* 아주 연한 핑크베이지 배경 */
+            --card-bg: #ffffff;         /* 순백색 카드 */
+            --primary-brown: #6f4e37;   /* 메인 커피 브라운 (제목, 테두리) */
+            --accent-pink: #d1a6b4;     /* 다운된 인디 핑크 (포인트 색상) */
+            --text-main: #4a2c2a;       /* 진한 브라운 본문 텍스트 */
+            --card-shadow: 0 10px 20px rgba(111,78,55,0.08); /* 부드러운 브라운 그림자 */
         }
 
         * {
@@ -22,201 +26,126 @@
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--bg-color);
+            font-family: 'Open Sans', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg-color);
             color: var(--text-main);
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Animated Background Gradient */
-        body::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.15), transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15), transparent 40%);
-            z-index: -1;
-            animation: ambientBg 15s linear infinite;
-        }
-
-        @keyframes ambientBg {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        header {
-            width: 100%;
-            padding: 60px 20px;
-            text-align: center;
+            min-height: 100vh;
+            padding: 40px 20px;
         }
 
         h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #38bdf8, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 2.2rem;
+            color: var(--primary-brown);
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-pink);
+            padding-bottom: 10px;
         }
 
-        p.subtitle {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            font-weight: 300;
-        }
-
-        main {
-            width: 100%;
-            max-width: 1200px;
-            padding: 0 20px 60px;
+        /* 2. 레이아웃 개선: 그리드 여백 및 너비 확장 */
+        #projects {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: 1fr 1fr; /* 2행 2열 유지 */
+            width: 100%;
+            max-width: 1000px; /* 더 넓게 확장 (세련된 느낌) */
+            gap: 30px; /* 카드 사이 간격 넓힘 */
         }
 
-        .project-card {
+        /* 3. 카드 디자인 개선: 심미성 강화 및 크기 조정 */
+        #projects .project-card {
             background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 16px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            border-radius: 16px; /* 더 둥글게 */
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(209, 166, 180, 0.2); /* 연한 핑크 테두리 */
+            overflow: hidden; /* 내부 요소가 테두리를 넘지 않도록 */
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* 호버 효과 */
         }
 
-        .project-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
-            0 0 0 1px rgba(255, 255, 255, 0.2);
+        /* 마우스 호버 시 효과 */
+        #projects .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(111,78,55,0.15);
         }
 
+        /* 카드 상단 헤더 추가 (과제 제목 표시) */
+        .card-header {
+            padding: 15px 20px;
+            background-color: #f8f1ef; /* 아주 연한 브라운 핑크 */
+            border-bottom: 1px solid rgba(209, 166, 180, 0.3);
+            font-weight: 600;
+            color: var(--primary-brown);
+            font-size: 0.95rem;
+        }
+
+        /* 4. 작품 짤림 방지 핵심: 비율 유지 크기 조정 */
         .iframe-container {
-            position: relative;
             width: 100%;
-            aspect-ratio: 3 / 2; /* Matches 600x400 sketch size */
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            /* ★ p5.js 캔버스 표준 비율(600x400 = 3:2) 유지 ★ */
+            aspect-ratio: 3 / 2;
+            position: relative;
+            background: #FFF; /* p5.js 로딩 전 배경 */
         }
 
-        .iframe-container iframe {
+        #projects .project-card iframe {
             position: absolute;
             top: 0;
             left: 0;
-            width: 600px;
-            height: 400px;
+            width: 100%;
+            height: 100%;
             border: none;
-            transform-origin: 0 0;
-            background: #fff; /* Default background for sketches */
+            display: block; /* iframe 하단 여백 제거 */
         }
 
-        .card-info {
-            padding: 0 8px 8px;
+        /* 반응형: 모바일 화면에서는 1열로 나열 */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            #projects { grid-template-columns: 1fr; gap: 20px; }
         }
 
-        .card-info h2 {
-            font-size: 1.25rem;
-            font-weight: 500;
-            margin-bottom: 4px;
-            color: var(--text-main);
-        }
-
-        .card-info p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>p5.js Artworks</h1>
-    <p class="subtitle">A collection of creative coding experiments</p>
-</header>
+<h1>Visual Portfolio</h1>
 
 <main id="projects">
+
     <div class="project-card">
+        <div class="card-header">정적 추상화 디자인 (과제 1)</div>
         <div class="iframe-container">
-            <iframe src="sample1/index.html" loading="lazy"></iframe>
-        </div>
-        <div class="card-info">
-            <h2>Sketch 1</h2>
-            <p>Generative geometric composition</p>
+            <iframe src="sample1/index.html"></iframe>
         </div>
     </div>
 
     <div class="project-card">
+        <div class="card-header">시간에 따른 움직임 (과제 4)</div>
         <div class="iframe-container">
-            <iframe src="sample2/index.html" loading="lazy"></iframe>
-        </div>
-        <div class="card-info">
-            <h2>Sketch 2</h2>
-            <p>Interactive visual experiment</p>
+            <iframe src="sample4/index.html"></iframe>
         </div>
     </div>
 
     <div class="project-card">
+        <div class="card-header">반복 패턴 그래픽스 (과제 2)</div>
         <div class="iframe-container">
-            <iframe src="sample3/index.html" loading="lazy"></iframe>
-        </div>
-        <div class="card-info">
-            <h2>Sketch 3</h2>
-            <p>Algorithmic art exploration</p>
+            <iframe src="sample2/index.html"></iframe>
         </div>
     </div>
 
     <div class="project-card">
+        <div class="card-header">인터랙티브 아트 (과제 3)</div>
         <div class="iframe-container">
-            <iframe src="sample4/index.html" loading="lazy"></iframe>
-        </div>
-        <div class="card-info">
-            <h2>Sketch 4</h2>
-            <p>Dynamic particle system</p>
+            <iframe src="sample3/index.html"></iframe>
         </div>
     </div>
+
 </main>
-
-<script>
-    function scaleIframes() {
-        const containers = document.querySelectorAll('.iframe-container');
-        containers.forEach(container => {
-            const width = container.clientWidth;
-            // p5.js sketches are 600px wide
-            const scale = width / 600;
-            const iframe = container.querySelector('iframe');
-            if (iframe) {
-                iframe.style.transform = `scale(${scale})`;
-            }
-        });
-    }
-
-    // Scale on resize and load
-    window.addEventListener('resize', scaleIframes);
-    window.addEventListener('load', scaleIframes);
-
-    // Also scale immediately in case load event is delayed
-    scaleIframes();
-
-    // Use ResizeObserver to keep iframes scaled perfectly as container changes
-    const observer = new ResizeObserver(() => {
-        scaleIframes();
-    });
-    const main = document.querySelector('main');
-    if (main) observer.observe(main);
-</script>
 
 </body>
 </html>
