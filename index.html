@@ -4,19 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>p5.js Visual Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
-        /* 브라운 & 핑크 톤 팔레트 */
+        /* 고급스러운 딥 네이비 & 슬레이트 톤 팔레트 */
         :root {
-            --bg-color: #fdf6f7;        /* 연한 핑크베이지 배경 */
-            --card-bg: #ffffff;         /* 카드 배경 */
-            --primary-brown: #6f4e37;   /* 딥 브라운 */
-            --accent-pink: #d1a6b4;     /* 인디 핑크 */
-            --text-main: #4a2c2a;       /* 텍스트용 다크 브라운 */
-            --card-shadow: 0 8px 16px rgba(111, 78, 55, 0.06);
+            --bg-color: #0f172a;        /* 베이스 배경: 딥 네이비 */
+            --card-bg: #1e293b;         /* 카드 배경: 미드나잇 네이비 */
+            --card-header-bg: #334155;  /* 카드 헤더: 다크 슬레이트 */
+            --text-main: #f8fafc;       /* 메인 텍스트: 화이트 스노우 */
+            --text-muted: #94a3b8;      /* 서브 텍스트: 실버 그레이 */
+            --accent-blue: #38bdf8;     /* 포인트 컬러: 일렉트릭 블루 */
+            --card-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
         }
 
         * {
@@ -26,42 +24,53 @@
         }
 
         body {
-            font-family: 'Open Sans', 'Malgun Gothic', sans-serif;
+            /* 사용자가 선호하는 깔끔한 시스템 폰트 스택 적용 */
+            font-family: 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 50px 20px;
         }
 
         h1 {
-            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
             font-weight: 600;
-            font-size: 2rem;
-            color: var(--primary-brown);
-            margin-bottom: 35px;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+            margin-bottom: 40px;
             text-align: center;
-            border-bottom: 3px solid var(--accent-pink);
-            padding-bottom: 8px;
+            position: relative;
         }
 
-        /* 2행 2열 고정 구조 (너비 고정) */
+        /* 타이틀 하단 포인트 라인 */
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-blue);
+            margin: 12px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        /* 2행 2열 고정 구조 (정확한 대칭 그리드) */
         #projects {
             display: grid;
             grid-template-columns: 300px 300px;
-            gap: 25px;
+            gap: 30px;
             width: 100%;
             max-width: 630px;
         }
 
-        /* 카드 디자인 */
+        /* 프리미엄 카드 디자인 */
         #projects .project-card {
             background: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 14px;
             box-shadow: var(--card-shadow);
-            border: 1px solid rgba(209, 166, 180, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -69,34 +78,34 @@
 
         /* 과제 타이틀 영역 */
         .card-header {
-            padding: 12px 15px;
-            background-color: #f8f1ef;
-            border-bottom: 1px solid rgba(209, 166, 180, 0.2);
+            padding: 14px 18px;
+            background-color: var(--card-header-bg);
             font-weight: 600;
-            color: var(--primary-brown);
-            font-size: 0.85rem;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            letter-spacing: -0.3px;
         }
 
-        /* [교정] 네이비 배경 짤림 및 흰 여백 방지 래퍼 */
+        /* 💡 스크롤바 원천 차단을 위한 고정 프레임 래퍼 */
         .iframe-wrapper {
             width: 300px;
             height: 200px;
             position: relative;
-            overflow: hidden;
-            /* 과제 2, 3의 네이비 배경과 동심원의 어두운 톤이 부드럽게 이어지도록 어두운 배경색 지정 */
+            overflow: hidden; /* 외곽 스크롤바 방지 */
             background: #0f172a;
         }
 
-        /* [교정] 기본 마진으로 인한 짤림을 방지하기 위해 크기를 미세하게 조정하고 여백 압축 */
+        /* 💡 내부 마진(8px)을 포함한 하드웨어 스케일링 연산 교정 */
         #projects .project-card iframe {
             position: absolute;
-            top: -4px;  /* 💡 iframe 내부 기본 body 마진(8px * 0.5)으로 인한 밀림 현상 상쇄 */
-            left: -4px; /* 💡 좌측 밀림 현상 상쇄 */
-            width: 616px; /* 여백 공간을 고려한 렌더링 영역 확보 */
-            height: 416px;
+            top: -4px;   /* 마진의 절반만큼 상단 정렬 */
+            left: -4px;  /* 마진의 절반만큼 좌측 정렬 */
+            width: 608px; /* 600px 캔버스 + 브라우저 기본 마진 8px */
+            height: 408px;/* 400px 캔버스 + 브라우저 기본 마진 8px */
             border: none;
             transform-origin: top left;
-            transform: scale(0.5); /* 600x400 원본 크기를 비율 손상 없이 절반으로 축소 */
+            transform: scale(0.5); /* 0.5배 정확히 압축 */
+            overflow: hidden; /* 내부 스크롤바 방지 */
         }
     </style>
 </head>
