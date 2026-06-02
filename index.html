@@ -4,19 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>p5.js Visual Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
-        /* 1. 디자인 컨셉: 브라운 & 핑크 톤 팔레트 설정 */
+        /* 고급스러운 딥 네이비 & 슬레이트 톤 팔레트 */
         :root {
-            --bg-color: #fdf6f7;        /* 아주 연한 핑크베이지 배경 */
-            --card-bg: #ffffff;         /* 순백색 카드 */
-            --primary-brown: #6f4e37;   /* 메인 커피 브라운 (제목, 테두리) */
-            --accent-pink: #d1a6b4;     /* 다운된 인디 핑크 (포인트 색상) */
-            --text-main: #4a2c2a;       /* 진한 브라운 본문 텍스트 */
-            --card-shadow: 0 10px 20px rgba(111,78,55,0.08); /* 부드러운 브라운 그림자 */
+            --bg-color: #0f172a;        /* 베이스 배경: 딥 네이비 */
+            --card-bg: #1e293b;         /* 카드 배경: 미드나잇 네이비 */
+            --card-header-bg: #334155;  /* 카드 헤더: 다크 슬레이트 */
+            --text-main: #f8fafc;       /* 메인 텍스트: 화이트 스노우 */
+            --text-muted: #94a3b8;      /* 서브 텍스트: 실버 그레이 */
+            --accent-blue: #38bdf8;     /* 포인트 컬러: 일렉트릭 블루 */
+            --card-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
         }
 
         * {
@@ -26,89 +24,89 @@
         }
 
         body {
-            font-family: 'Open Sans', 'Malgun Gothic', sans-serif;
+            /* 사용자가 선호하는 깔끔한 시스템 폰트 스택 적용 */
+            font-family: 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 50px 20px;
         }
 
         h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
             font-size: 2.2rem;
-            color: var(--primary-brown);
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
             margin-bottom: 40px;
             text-align: center;
-            border-bottom: 3px solid var(--accent-pink);
-            padding-bottom: 10px;
+            position: relative;
         }
 
-        /* 2. 레이아웃 개선: 그리드 여백 및 너비 확장 */
+        /* 타이틀 하단 포인트 라인 */
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-blue);
+            margin: 12px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        /* 2행 2열 고정 구조 (정확한 대칭 그리드) */
         #projects {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 2행 2열 유지 */
+            grid-template-columns: 300px 300px;
+            gap: 30px;
             width: 100%;
-            max-width: 1000px; /* 더 넓게 확장 (세련된 느낌) */
-            gap: 30px; /* 카드 사이 간격 넓힘 */
+            max-width: 630px;
         }
 
-        /* 3. 카드 디자인 개선: 심미성 강화 및 크기 조정 */
+        /* 프리미엄 카드 디자인 */
         #projects .project-card {
             background: var(--card-bg);
-            border-radius: 16px; /* 더 둥글게 */
+            border-radius: 14px;
             box-shadow: var(--card-shadow);
-            border: 1px solid rgba(209, 166, 180, 0.2); /* 연한 핑크 테두리 */
-            overflow: hidden; /* 내부 요소가 테두리를 넘지 않도록 */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* 호버 효과 */
         }
 
-        /* 마우스 호버 시 효과 */
-        #projects .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(111,78,55,0.15);
-        }
-
-        /* 카드 상단 헤더 추가 (과제 제목 표시) */
+        /* 과제 타이틀 영역 */
         .card-header {
-            padding: 15px 20px;
-            background-color: #f8f1ef; /* 아주 연한 브라운 핑크 */
-            border-bottom: 1px solid rgba(209, 166, 180, 0.3);
+            padding: 14px 18px;
+            background-color: var(--card-header-bg);
             font-weight: 600;
-            color: var(--primary-brown);
-            font-size: 0.95rem;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            letter-spacing: -0.3px;
         }
 
-        /* 4. 작품 짤림 방지 핵심: 비율 유지 크기 조정 */
-        .iframe-container {
-            width: 100%;
-            /* ★ p5.js 캔버스 표준 비율(600x400 = 3:2) 유지 ★ */
-            aspect-ratio: 3 / 2;
+        /* 💡 스크롤바 원천 차단을 위한 고정 프레임 래퍼 */
+        .iframe-wrapper {
+            width: 300px;
+            height: 200px;
             position: relative;
-            background: #FFF; /* p5.js 로딩 전 배경 */
+            overflow: hidden; /* 외곽 스크롤바 방지 */
+            background: #0f172a;
         }
 
+        /* 💡 내부 마진(8px)을 포함한 하드웨어 스케일링 연산 교정 */
         #projects .project-card iframe {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: -4px;   /* 마진의 절반만큼 상단 정렬 */
+            left: -4px;  /* 마진의 절반만큼 좌측 정렬 */
+            width: 608px; /* 600px 캔버스 + 브라우저 기본 마진 8px */
+            height: 408px;/* 400px 캔버스 + 브라우저 기본 마진 8px */
             border: none;
-            display: block; /* iframe 하단 여백 제거 */
+            transform-origin: top left;
+            transform: scale(0.5); /* 0.5배 정확히 압축 */
+            overflow: hidden; /* 내부 스크롤바 방지 */
         }
-
-        /* 반응형: 모바일 화면에서는 1열로 나열 */
-        @media (max-width: 768px) {
-            h1 { font-size: 1.8rem; }
-            #projects { grid-template-columns: 1fr; gap: 20px; }
-        }
-
     </style>
 </head>
 <body>
@@ -118,30 +116,30 @@
 <main id="projects">
 
     <div class="project-card">
-        <div class="card-header">정적 추상화 디자인 (과제 1)</div>
-        <div class="iframe-container">
-            <iframe src="sample1/index.html"></iframe>
+        <div class="card-header">과제 1 | 정적 추상화 디자인</div>
+        <div class="iframe-wrapper">
+            <iframe src="sample1/index.html" scrolling="no"></iframe>
         </div>
     </div>
 
     <div class="project-card">
-        <div class="card-header">시간에 따른 움직임 (과제 4)</div>
-        <div class="iframe-container">
-            <iframe src="sample4/index.html"></iframe>
+        <div class="card-header">과제 4 | 시간에 따른 움직임</div>
+        <div class="iframe-wrapper">
+            <iframe src="sample4/index.html" scrolling="no"></iframe>
         </div>
     </div>
 
     <div class="project-card">
-        <div class="card-header">반복 패턴 그래픽스 (과제 2)</div>
-        <div class="iframe-container">
-            <iframe src="sample2/index.html"></iframe>
+        <div class="card-header">과제 2 | 반복 패턴 그래픽스</div>
+        <div class="iframe-wrapper">
+            <iframe src="sample2/index.html" scrolling="no"></iframe>
         </div>
     </div>
 
     <div class="project-card">
-        <div class="card-header">인터랙티브 아트 (과제 3)</div>
-        <div class="iframe-container">
-            <iframe src="sample3/index.html"></iframe>
+        <div class="card-header">과제 3 | 인터랙티브 아트</div>
+        <div class="iframe-wrapper">
+            <iframe src="sample3/index.html" scrolling="no"></iframe>
         </div>
     </div>
 
